@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno y credenciales locales (nunca subir secretos al repositorio)
+.env
+.env.local
+.env.*.local
+client_secret_*.json
+
+# Compilados y cachés
+dist/
+build/
+.vite/
+coverage/
+*.log
+
+# Sistema operativo / IDE
+.DS_Store
+Thumbs.db
