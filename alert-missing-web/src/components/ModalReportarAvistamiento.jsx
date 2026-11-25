@@ -179,11 +179,40 @@ export function ModalReportarAvistamiento({
           </div>
         )}
 
-        {error && (
+        {/*{error && (
           <div className="aviso aviso--error" role="alert">
             {error}
           </div>
-        )}
+        )}*/}
+              {error && (
+        <div
+          className="modal-backdrop"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="titulo-modal-error"
+          onClick={() => setError('')}
+        >
+          <div className="modal modal--error" onClick={(e) => e.stopPropagation()}>
+            <h3 id="titulo-modal-error" className="modal__titulo-error">
+              Verifica la información
+            </h3>
+            <p className="modal__mensaje-error">{error}</p>
+            <div className="modal__acciones">
+              <button
+                type="button"
+                className="btn btn--peligro"
+                onClick={() => setError('')}
+                autoFocus
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
 
         {!isAuthenticated ? (
           <div>
