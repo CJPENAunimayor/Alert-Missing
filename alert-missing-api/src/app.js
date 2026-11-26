@@ -17,7 +17,9 @@ export function createApp() {
 
   app.use(
     cors({
-      origin: env.CORS_ORIGIN.split(',').map((o) => o.trim()),
+      origin: env.CORS_ORIGIN.split(',')
+        .map((o) => o.trim().replace(/\/$/, ''))
+        .filter(Boolean),
       credentials: true,
     })
   );

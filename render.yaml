@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: alert-missing-api
+    runtime: node
+    plan: free
+    rootDir: alert-missing-api
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_PREFIX
+        value: /api
+      - key: JWT_EXPIRES_IN
+        value: 12h
+      - key: BCRYPT_SALT_ROUNDS
+        value: "10"
+      - key: SUPABASE_STORAGE_BUCKET
+        value: ImageAlertMissing
+      - key: SIRDEC_PLAZO_DIAS_HABILES
+        value: "1"
+      - key: SIRDEC_CHECK_INTERVAL_MS
+        value: "300000"
+      - key: CORS_ORIGIN
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ONESIGNAL_APP_ID
+        sync: false
+      - key: ONESIGNAL_REST_API_KEY
+        sync: false
