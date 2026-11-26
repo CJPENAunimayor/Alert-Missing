@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
@@ -9,6 +12,11 @@ import auditoriaRoutes from './routes/auditoria.routes.js';
 import { colaNotificacionesDefault } from './jobs/ColaNotificaciones.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { env } from './shared/env.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const WEB_DIST_DIR = path.resolve(__dirname, '../../alert-missing-web/dist');
+const WEB_INDEX_FILE = path.join(WEB_DIST_DIR, 'index.html');
 
 export function createApp() {
   const app = express();
@@ -46,12 +54,28 @@ export function createApp() {
   app.use(`${env.API_PREFIX}/dispositivos`, dispositivoRoutes);
   app.use(`${env.API_PREFIX}/auditoria`, auditoriaRoutes);
 
-  app.use((_req, res) => {
+  // 404 JSON para rutas inexistentes dentro de /api
+  app.use(env.API_PREFIX, (_req, res) => {
     res.status(404).json({
       error: 'NOT_FOUND',
-      mensaje: 'Ruta no encontrada.',
+      mensaje: 'Ruta de API no encontrada.',
     });
   });
+
+  // Modo unificado en un solo puerto: sirve el frontend compilado (alert-missing-web/dist) si existe
+  if (fs.existsSync(WEB_INDEX_FILE)) {
+    app.use(express.static(WEB_DIST_DIR));
+    app.get('*', (_req, res) => {
+      res.sendFile(WEB_INDEX_FILE);
+    });
+  } else {
+    app.use((_req, res) => {
+      res.status(404).json({
+        error: 'NOT_FOUND',
+        mensaje: 'Ruta no encontrada.',
+      });
+    });
+  }
 
   app.use(errorHandler);
 
